@@ -14,16 +14,28 @@ def add_task(event):
     task_entry.delete(0,tk.END)
     if task:
         with open('tasklist.txt', 'a') as file:
-            file.write(task)
+            file.write(f'\n{task}')
         
         listbox.insert(tk.END,task)
         task_list.append(task)
         
 def delete_task():
-    task = listbox.get()
+    
     task = listbox.get(tk.ANCHOR)
     listbox.delete(tk.ANCHOR)
     task_list.remove(task)
+    with open('tasklist.txt', 'w') as file:
+        for task in task_list:
+            file.write(f'\n{task}')
+    
+def open_tasks():
+    with open('tasklist.txt' , 'r') as file:
+        tasks = file.readlines()
+        
+    for task in tasks:
+        if task !='\n':
+            listbox.insert(tk.END,task)
+            task_list.append(task)
         
 
 heading = ttk.Label(root, text='ALL TASKS',font='arial 20 bold')
@@ -41,6 +53,8 @@ frame1.pack()
 listbox = tk.Listbox(frame1, font='arial 12', width=40 ,height=16)
 listbox.pack()
 
+open_tasks()
+    
 s = ttk.Style()
 s.configure('TButton', font=('arial',12))
 
